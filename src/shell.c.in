@@ -9505,7 +9505,7 @@ static int do_meta_command(char *zLine, ShellState *p){
     int i;
     int eMode = 0;
     int bOnce = 0;            /* 0: .output, 1: .once, 2: .excel */
-    static const char *zBomUtf8 = "\xef\xbb\xbf﻿";
+    static const char *zBomUtf8 = "\xef\xbb\xbf\xFE\xFF";
     const char *zBom = 0;
 
     failIfSafeMode(p, "cannot run .%s in safe mode", azArg[0]);

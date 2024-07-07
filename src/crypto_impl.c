@@ -1183,6 +1183,10 @@ static int sqlcipher_cipher_ctx_key_derive(codec_ctx *ctx, cipher_ctx *c_ctx) {
       cipher_hex2bin(z + (ctx->key_sz * 2), (ctx->kdf_salt_sz * 2), ctx->kdf_salt);
     } else { 
       sqlcipher_log(SQLCIPHER_LOG_DEBUG, "cipher_ctx_key_derive: deriving key using full PBKDF2 with %d iterations", ctx->kdf_iter);
+	  if (cipher_isHex(c_ctx->pass, ctx->key_sz * 2)) {
+		  cipher_hex2bin(c_ctx->pass, c_ctx->pass_sz, c_ctx->pass);
+		  c_ctx->pass_sz = c_ctx->pass_sz >> 1;
+	  }
       if(ctx->provider->kdf(ctx->provider_ctx, ctx->kdf_algorithm, c_ctx->pass, c_ctx->pass_sz, 
                     ctx->kdf_salt, ctx->kdf_salt_sz, ctx->kdf_iter,
                     ctx->key_sz, c_ctx->key) != SQLITE_OK) {

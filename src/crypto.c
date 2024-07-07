@@ -560,40 +560,50 @@ int sqlcipher_codec_pragma(sqlite3* db, int iDb, Parse *pParse, const char *zLef
   }else 
   if( sqlite3_stricmp(zLeft,"cipher_default_compatibility")==0 ){
     if(zRight) {
-      int version = atoi(zRight); 
-      switch(version) {
-        case 1: 
-          sqlcipher_set_default_pagesize(1024);
-          sqlcipher_set_default_hmac_algorithm(SQLCIPHER_HMAC_SHA1);
-          sqlcipher_set_default_kdf_algorithm(SQLCIPHER_PBKDF2_HMAC_SHA1);
-          sqlcipher_set_default_kdf_iter(4000);
-          sqlcipher_set_default_use_hmac(0);
-          break;
+		if (strcmp(zRight, "wx") == 0
+			|| strcmp(zRight, "wechat") == 0
+			|| strcmp(zRight, "WeChat") == 0) {
+			sqlcipher_set_default_pagesize(4096);
+			sqlcipher_set_default_hmac_algorithm(SQLCIPHER_HMAC_SHA1);
+			sqlcipher_set_default_kdf_algorithm(SQLCIPHER_PBKDF2_HMAC_SHA1);
+			sqlcipher_set_default_kdf_iter(64000);
+			sqlcipher_set_default_use_hmac(1);
+		} else {
+		  int version = atoi(zRight); 
+		  switch(version) {
+			case 1: 
+			  sqlcipher_set_default_pagesize(1024);
+			  sqlcipher_set_default_hmac_algorithm(SQLCIPHER_HMAC_SHA1);
+			  sqlcipher_set_default_kdf_algorithm(SQLCIPHER_PBKDF2_HMAC_SHA1);
+			  sqlcipher_set_default_kdf_iter(4000);
+			  sqlcipher_set_default_use_hmac(0);
+			  break;
 
-        case 2: 
-          sqlcipher_set_default_pagesize(1024);
-          sqlcipher_set_default_hmac_algorithm(SQLCIPHER_HMAC_SHA1);
-          sqlcipher_set_default_kdf_algorithm(SQLCIPHER_PBKDF2_HMAC_SHA1);
-          sqlcipher_set_default_kdf_iter(4000);
-          sqlcipher_set_default_use_hmac(1);
-          break;
+			case 2: 
+			  sqlcipher_set_default_pagesize(1024);
+			  sqlcipher_set_default_hmac_algorithm(SQLCIPHER_HMAC_SHA1);
+			  sqlcipher_set_default_kdf_algorithm(SQLCIPHER_PBKDF2_HMAC_SHA1);
+			  sqlcipher_set_default_kdf_iter(4000);
+			  sqlcipher_set_default_use_hmac(1);
+			  break;
 
-        case 3:
-          sqlcipher_set_default_pagesize(1024);
-          sqlcipher_set_default_hmac_algorithm(SQLCIPHER_HMAC_SHA1);
-          sqlcipher_set_default_kdf_algorithm(SQLCIPHER_PBKDF2_HMAC_SHA1);
-          sqlcipher_set_default_kdf_iter(64000);
-          sqlcipher_set_default_use_hmac(1);
-          break;
+			case 3:
+			  sqlcipher_set_default_pagesize(1024);
+			  sqlcipher_set_default_hmac_algorithm(SQLCIPHER_HMAC_SHA1);
+			  sqlcipher_set_default_kdf_algorithm(SQLCIPHER_PBKDF2_HMAC_SHA1);
+			  sqlcipher_set_default_kdf_iter(64000);
+			  sqlcipher_set_default_use_hmac(1);
+			  break;
 
-        default:
-          sqlcipher_set_default_pagesize(4096);
-          sqlcipher_set_default_hmac_algorithm(SQLCIPHER_HMAC_SHA512);
-          sqlcipher_set_default_kdf_algorithm(SQLCIPHER_PBKDF2_HMAC_SHA512);
-          sqlcipher_set_default_kdf_iter(256000);
-          sqlcipher_set_default_use_hmac(1);
-          break;
-      }  
+			default:
+			  sqlcipher_set_default_pagesize(4096);
+			  sqlcipher_set_default_hmac_algorithm(SQLCIPHER_HMAC_SHA512);
+			  sqlcipher_set_default_kdf_algorithm(SQLCIPHER_PBKDF2_HMAC_SHA512);
+			  sqlcipher_set_default_kdf_iter(256000);
+			  sqlcipher_set_default_use_hmac(1);
+			  break;
+		  } 
+		}
     } 
   }else 
   if( sqlite3_stricmp(zLeft,"cipher_memory_security")==0 ){

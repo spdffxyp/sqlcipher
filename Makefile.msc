@@ -209,7 +209,7 @@ SYMBOLS = 1
 # Set this to non-0 to use the SQLite debugging heap subsystem.
 #
 !IFNDEF MEMDEBUG
-MEMDEBUG = 0
+MEMDEBUG = 1
 !ENDIF
 
 # Set this to non-0 to use the Win32 native heap subsystem.
@@ -245,6 +245,7 @@ ASAN = 0
 #
 !IFNDEF DEBUG
 DEBUG = 0
+OPTIMIZATIONS = 2
 !ENDIF
 
 # <<mark>>
@@ -1039,9 +1040,9 @@ TLIBS =
 # default to file, 2 to default to memory, and 3 to force temporary
 # tables to always be in memory.
 #
-TCC = $(TCC) -DSQLITE_TEMP_STORE=1
-RCC = $(RCC) -DSQLITE_TEMP_STORE=1
-
+TCC = $(TCC) -DSQLITE_TEMP_STORE=2
+RCC = $(RCC) -DSQLITE_TEMP_STORE=2
+TCC = $(TCC) -DSQLITE_HAS_CODEC -I"C:\Program Files\OpenSSL-Win64\include"
 # Enable/disable loadable extensions, and other optional features
 # based on configuration. (-DSQLITE_OMIT*, -DSQLITE_ENABLE*).
 # The same set of OMIT and ENABLE flags should be passed to the
@@ -1258,6 +1259,8 @@ LTLIBS = $(LTLIBS) $(ZLIBLIB)
 LTLIBPATHS = $(LTLIBPATHS) /LIBPATH:$(ICULIBDIR)
 LTLIBS = $(LTLIBS) $(LIBICU)
 !ENDIF
+LTLIBPATHS = $(LTLIBPATHS) /LIBPATH:$(ICULIBDIR) /LIBPATH:"C:\Program Files\OpenSSL-Win64\lib\VC\x64\MT"
+LTLIBS = $(LTLIBS) libcrypto.lib libssl.lib ws2_32.lib shell32.lib advapi32.lib gdi32.lib user32.lib crypt32.lib kernel32.lib
 # <</mark>>
 
 # You should not have to change anything below this line
