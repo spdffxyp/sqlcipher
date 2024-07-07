@@ -497,64 +497,79 @@ int sqlcipher_codec_pragma(sqlite3* db, int iDb, Parse *pParse, const char *zLef
   if( sqlite3_stricmp(zLeft,"cipher_compatibility")==0 ){
     if(ctx) {
       if(zRight) {
-        int version = atoi(zRight); 
+		  if (strcmp(zRight, "wx") == 0
+			  || strcmp(zRight, "wechat") == 0
+			  || strcmp(zRight, "WeChat") == 0) {
+			  rc = sqlcipher_codec_ctx_set_pagesize(ctx, 4096);
+			  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+			  rc = sqlcipher_codec_ctx_set_hmac_algorithm(ctx, SQLCIPHER_HMAC_SHA1);
+			  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+			  rc = sqlcipher_codec_ctx_set_kdf_algorithm(ctx, SQLCIPHER_PBKDF2_HMAC_SHA1);
+			  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+			  rc = sqlcipher_codec_ctx_set_kdf_iter(ctx, 64000);
+			  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+			  rc = sqlcipher_codec_ctx_set_use_hmac(ctx, 1);
+			  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+		  }else {
+			  int version = atoi(zRight);
 
-        switch(version) {
-          case 1: 
-            rc = sqlcipher_codec_ctx_set_pagesize(ctx, 1024);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_hmac_algorithm(ctx, SQLCIPHER_HMAC_SHA1);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_kdf_algorithm(ctx, SQLCIPHER_PBKDF2_HMAC_SHA1);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_kdf_iter(ctx, 4000); 
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_use_hmac(ctx, 0);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            break;
+			  switch (version) {
+			  case 1:
+				  rc = sqlcipher_codec_ctx_set_pagesize(ctx, 1024);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_hmac_algorithm(ctx, SQLCIPHER_HMAC_SHA1);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_kdf_algorithm(ctx, SQLCIPHER_PBKDF2_HMAC_SHA1);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_kdf_iter(ctx, 4000);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_use_hmac(ctx, 0);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  break;
 
-          case 2: 
-            rc = sqlcipher_codec_ctx_set_pagesize(ctx, 1024);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_hmac_algorithm(ctx, SQLCIPHER_HMAC_SHA1);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_kdf_algorithm(ctx, SQLCIPHER_PBKDF2_HMAC_SHA1);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_kdf_iter(ctx, 4000); 
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_use_hmac(ctx, 1);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            break;
+			  case 2:
+				  rc = sqlcipher_codec_ctx_set_pagesize(ctx, 1024);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_hmac_algorithm(ctx, SQLCIPHER_HMAC_SHA1);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_kdf_algorithm(ctx, SQLCIPHER_PBKDF2_HMAC_SHA1);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_kdf_iter(ctx, 4000);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_use_hmac(ctx, 1);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  break;
 
-          case 3:
-            rc = sqlcipher_codec_ctx_set_pagesize(ctx, 1024);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_hmac_algorithm(ctx, SQLCIPHER_HMAC_SHA1);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_kdf_algorithm(ctx, SQLCIPHER_PBKDF2_HMAC_SHA1);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_kdf_iter(ctx, 64000); 
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_use_hmac(ctx, 1);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            break;
+			  case 3:
+				  rc = sqlcipher_codec_ctx_set_pagesize(ctx, 1024);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_hmac_algorithm(ctx, SQLCIPHER_HMAC_SHA1);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_kdf_algorithm(ctx, SQLCIPHER_PBKDF2_HMAC_SHA1);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_kdf_iter(ctx, 64000);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_use_hmac(ctx, 1);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  break;
 
-          default:
-            rc = sqlcipher_codec_ctx_set_pagesize(ctx, 4096);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_hmac_algorithm(ctx, SQLCIPHER_HMAC_SHA512);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_kdf_algorithm(ctx, SQLCIPHER_PBKDF2_HMAC_SHA512);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_kdf_iter(ctx, 256000); 
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            rc = sqlcipher_codec_ctx_set_use_hmac(ctx, 1);
-            if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
-            break;
-        }  
+			  default:
+				  rc = sqlcipher_codec_ctx_set_pagesize(ctx, 4096);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_hmac_algorithm(ctx, SQLCIPHER_HMAC_SHA512);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_kdf_algorithm(ctx, SQLCIPHER_PBKDF2_HMAC_SHA512);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_kdf_iter(ctx, 256000);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  rc = sqlcipher_codec_ctx_set_use_hmac(ctx, 1);
+				  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+				  break;
+			  }
 
-        rc = codec_set_btree_to_codec_pagesize(db, pDb, ctx);
-        if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+			  rc = codec_set_btree_to_codec_pagesize(db, pDb, ctx);
+			  if (rc != SQLITE_OK) sqlcipher_codec_ctx_set_error(ctx, SQLITE_ERROR);
+		  }
       } 
     }
   }else 
