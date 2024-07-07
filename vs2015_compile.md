@@ -27,7 +27,7 @@ set pragma:
 
 sqlite> PRAGMA cipher_default_compatibility = wx;
 
-sqlite> PRAGMA cipher_default_settings;
+sqlite> PRAGMA cipher_compatibility;
 
 or:
 
