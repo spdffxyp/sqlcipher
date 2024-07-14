@@ -1183,9 +1183,12 @@ static int sqlcipher_cipher_ctx_key_derive(codec_ctx *ctx, cipher_ctx *c_ctx) {
       cipher_hex2bin(z + (ctx->key_sz * 2), (ctx->kdf_salt_sz * 2), ctx->kdf_salt);
     } else { 
       sqlcipher_log(SQLCIPHER_LOG_DEBUG, "cipher_ctx_key_derive: deriving key using full PBKDF2 with %d iterations", ctx->kdf_iter);
-	  if (cipher_isHex(c_ctx->pass, ctx->key_sz * 2)) {
-		  cipher_hex2bin(c_ctx->pass, c_ctx->pass_sz, c_ctx->pass);
-		  c_ctx->pass_sz = c_ctx->pass_sz >> 1;
+	  if (c_ctx->pass_sz == ((ctx->key_sz * 2) + 3) && sqlite3StrNICmp((const char *)c_ctx->pass, "h'", 2) == 0 && cipher_isHex(c_ctx->pass + 2, ctx->key_sz * 2)) {
+		  int n = c_ctx->pass_sz - 3; /* adjust for leading h' and tailing ' */
+		  const unsigned char *z = c_ctx->pass + 2; /* adjust lead offset of x' */
+		  sqlcipher_log(SQLCIPHER_LOG_DEBUG, "cipher_ctx_key_derive: using bytes key from hex string");
+		  cipher_hex2bin(z, n, c_ctx->pass);
+		  c_ctx->pass_sz = n >> 1;
 	  }
       if(ctx->provider->kdf(ctx->provider_ctx, ctx->kdf_algorithm, c_ctx->pass, c_ctx->pass_sz, 
                     ctx->kdf_salt, ctx->kdf_salt_sz, ctx->kdf_iter,
