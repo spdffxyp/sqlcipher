@@ -5,6 +5,7 @@ https://www.domstamand.com/compiling-sqlcipher-sqlite-encrypted-for-windows-usin
 
 ## download and install:
 https://slproweb.com/download/Win64OpenSSL-3_3_1.exe
+
 https://www.irontcl.com/downloads/irontcl-amd64-8.6.7.zip
 
 
